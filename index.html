@@ -1,0 +1,105 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CS452</title>
+  <meta name="description" content="Browser for CS452 Code">
+  <meta name="author" content="CS452 Student">
+</head>
+
+<body>
+  <canvas id="glCanvas" width="1280" height="720"></canvas>
+  <div class="control_area" style="width: 1280px;">
+    <div class="cam_pos_sliders" style="float: left; width: 30%;">
+      <b>Controls</b>
+      <hr>
+      <p>Camera Position:</p>
+      <div>
+        <label for="camX">X:</label>
+        <input type="range" min="-20" max="20" value="2" step="0.1" class="slider" id="camX">
+        <input id="camXVal" name="camXVal" value="2" style="width: 50px;">
+      </div>
+      <div>
+        <label for="camY">Y:</label>
+        <input type="range" min="-20" max="20" value="2" step="0.1" class="slider" id="camY">
+        <input id="camYVal" name="camYVal" value="2" style="width: 50px;">
+      </div>
+      <div>
+        <label for="camZ">Z:</label>
+        <input type="range" min="-20" max="20" value="-4" step="0.1" class="slider" id="camZ">
+        <input id="camZVal" name="camZVal" value="-4" style="width: 50px;">
+      </div>
+      
+      
+      
+      <!--hid these so they pass loading checks-->
+      <div style="visibility: hidden;">
+        <label for="fogAmount">(%):</label>
+        <input type="range" min="0" max="100" value="2" step="0.1" class="slider" id="fogY">
+        <input id="fogYVal" name="fogYVal" value="2" style="width: 50px;">
+      </div>
+      <div style="visibility: hidden;">
+        <label for="fogAmount">(%):</label>
+        <input type="range" min="0" max="100" value="2" step="0.1" class="slider" id="fogZ">
+        <input id="fogZVal" name="fogZVal" value="2" style="width: 50px;">
+      </div>
+    </div>
+    <div class="grade_table" style="float: right; width: 70%;">
+      <b>Please allow the models to load, it should not take long.<hr></b>
+      <b><u>Cloud Options</u></b>
+      <div>
+        <p>
+          <input type="checkbox" id="showCloudsCheck">
+          Show Clouds?<br>
+          Turning off allows specular map to be shown better!
+        </p>
+      </div>
+      <p>Cloud Fog Amount (%):</p>
+      <div>
+        <label for="fogAmount">(%):</label>
+        <input type="range" min="0" max="100" value="33" step="0.1" class="slider" id="fogX">
+        <input id="fogXVal" name="fogXVal" value="33" style="width: 50px;">
+      </div>
+      
+    </div>
+    <div class="cam_look_sliders" style="float: right; width: 50%;visibility: hidden;">
+      <p>Camera Focus:</p>
+      <div>
+        <label for="lookX">X:</label>
+        <input type="range" min="-20" max="20" value="0" step="0.1" class="slider" id="lookX">
+        <input id="lookXVal" name="lookXVal" value="0" style="width: 50px;">
+      </div>
+      <div>
+        <label for="lookY">Y:</label>
+        <input type="range" min="-20" max="20" value="0" step="0.1" class="slider" id="lookY">
+        <input id="lookYVal" name="lookYVal" value="0" style="width: 50px;">
+      </div>
+      <div>
+        <label for="lookZs">Z:</label>
+        <input type="range" min="-20" max="20" value="0" step="0.1" class="slider" id="lookZ">
+        <input id="lookZVal" name="lookZVal" value="0" style="width: 50px;">
+      </div>
+    </div>
+    
+    
+
+
+
+  </div>
+  <!-- If you add a file, make sure to include it here! -->
+  <script src="js/main.js"></script>
+  <script src="js/shader.js"></script>
+  <script src="js/vertex-data.js"></script>
+  <script src="js/drawable.js"></script>
+  <script src="js/helpers.js"></script>
+  <script src="js/obj-loader.js"></script>
+  <!-- http://glmatrix.net/docs/ -->
+  <script src="js/gl-matrix-min.js"></script>
+  <!--api and stuff for midterm-->
+  <script src="js/bump_mapping_api.js"></script>
+  <!--
+    <script src="js/bump_mapping_source_code.js"></script>
+  -->
+</body>
+</html>
