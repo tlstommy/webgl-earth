@@ -6,11 +6,11 @@ var gl = null;
 // The rest is here simply because it made debugging easier...
 var myShader = null;
 var textureSrcs = [];
-var moonPosCurrent = [0.0,0.0,0.0];
+var moonPosCurrent = [0.0, 0.0, 0.0];
 //array of drawables
 var myDrawable = [];
 var loadedTextures = [];
-var drawableIDs = ["earth","moon","skybox","clouds","spacecraft"];
+var drawableIDs = ["earth", "moon", "skybox", "clouds", "spacecraft"];
 var myDrawableInitialized = null;
 var modelViewMatrix = null;
 var normalViewMatrix = null;
@@ -19,14 +19,13 @@ var globalTime = 0.0;
 var parsedData = null;
 
 //location of view camera and the light source
-var cameraPosition = [0.0,0.0,0.0];
+var cameraPosition = [0.0, 0.0, 0.0];
 var modelMatrix = null;
 
 
-//num of sphertes to draw
+//num of spheres to draw
 
 var sphereModelCountMAX = 6;
-
 var fogAmountSliderVal = null;
 var showCloudsBool = true;
 
@@ -78,13 +77,13 @@ function main() {
   const FOV = degreesToRadians(60);
   const aspectRatio = gl.canvas.clientWidth / gl.canvas.clientHeight;
   const zNear = 0.1;
-  const zFar  = 300.0;
+  const zFar = 300.0;
   projectionMatrix = glMatrix.mat4.create();
   glMatrix.mat4.perspective(projectionMatrix,
-                   FOV,
-                   aspectRatio,
-                   zNear,
-                   zFar);
+    FOV,
+    aspectRatio,
+    zNear,
+    zFar);
 
 
   // Setup Controls
@@ -100,7 +99,7 @@ function main() {
 function setupUI() {
   // in index.html we need to setup some callback functions for the sliders
   // right now just have them report the values beside the slider.
-  let sliders = ['cam', 'look','fog'];
+  let sliders = ['cam', 'look', 'fog'];
   let dims = ['X', 'Y', 'Z',];
   // for cam and look UI..
   sliders.forEach(controlType => {
@@ -154,7 +153,7 @@ async function setupScene() {
   let moonFragSource = await loadNetworkResourceAsText('resources/shaders/frags/moonBump300.frag');
 
   let cloudFragSource = await loadNetworkResourceAsText('resources/shaders/frags/cloudsTexture300.frag');
-  
+
   let skyboxFragSource = await loadNetworkResourceAsText('resources/shaders/frags/skyboxTexture300.frag');
 
   let spacecraftVertSource = await loadNetworkResourceAsText('resources/shaders/verts/spacecraftPhong300.vert');
@@ -167,7 +166,7 @@ async function setupScene() {
   //if you want to just use the same image for all faces just set it to face 1 and then set all others to ""
   //https://jaxry.github.io/panorama-to-cubemap/
   textureSrcs = {
-    earth:{
+    earth: {
       face1: "resources/textures/space/earth/px.png",// +x
       face2: "resources/textures/space/earth/nx.png",// -x
       face3: "resources/textures/space/earth/py.png",// +y
@@ -176,7 +175,7 @@ async function setupScene() {
       face6: "resources/textures/space/earth/nz.png",// -z
     },
 
-    earthBumpMap:{
+    earthBumpMap: {
       face1: "resources/bumpmaps/space/earth/px.png",// +x
       face2: "resources/bumpmaps/space/earth/nx.png",// -x
       face3: "resources/bumpmaps/space/earth/py.png",// +y
@@ -184,7 +183,7 @@ async function setupScene() {
       face5: "resources/bumpmaps/space/earth/pz.png",// +z
       face6: "resources/bumpmaps/space/earth/nz.png",// -z
     },
-    earthSpecularMap:{
+    earthSpecularMap: {
       face1: "resources/specularmaps/earthSpecular/px.png",// +x
       face2: "resources/specularmaps/earthSpecular/nx.png",// -x
       face3: "resources/specularmaps/earthSpecular/py.png",// +y
@@ -192,7 +191,7 @@ async function setupScene() {
       face5: "resources/specularmaps/earthSpecular/pz.png",// +z
       face6: "resources/specularmaps/earthSpecular/nz.png",// -z
     },
-    clouds:{
+    clouds: {
       face1: "resources/textures/space/clouds/px.png",// +x
       face2: "resources/textures/space/clouds/nx.png",// -x
       face3: "resources/textures/space/clouds/py.png",// +y
@@ -200,7 +199,7 @@ async function setupScene() {
       face5: "resources/textures/space/clouds/pz.png",// +z
       face6: "resources/textures/space/clouds/nz.png",// -z
     },
-    moon:{
+    moon: {
       face1: "resources/textures/space/moon/px.png",// +x
       face2: "resources/textures/space/moon/nx.png",// -x
       face3: "resources/textures/space/moon/py.png",// +y
@@ -208,7 +207,7 @@ async function setupScene() {
       face5: "resources/textures/space/moon/pz.png",// +z
       face6: "resources/textures/space/moon/nz.png",// -z
     },
-    moonBumpMap:{
+    moonBumpMap: {
       face1: "resources/bumpmaps/space/moon/px.png",// +x
       face2: "resources/bumpmaps/space/moon/nx.png",// -x
       face3: "resources/bumpmaps/space/moon/py.png",// +y
@@ -216,7 +215,7 @@ async function setupScene() {
       face5: "resources/bumpmaps/space/moon/pz.png",// +z
       face6: "resources/bumpmaps/space/moon/nz.png",// -z
     },
-    skybox:{
+    skybox: {
       face1: "resources/enviromaps/skybox/px.png",// +x
       face2: "resources/enviromaps/skybox/nx.png",// -x
       face3: "resources/enviromaps/skybox/py.png",// +y
@@ -232,24 +231,24 @@ async function setupScene() {
 
 
   //earth  
-  initializeMyObject(earthVertSource, earthFragSource, objData,0);
+  initializeMyObject(earthVertSource, earthFragSource, objData, 0);
 
 
 
   //moon
-  initializeMyObject(moonVertSource, moonFragSource, moonObjData,1);
+  initializeMyObject(moonVertSource, moonFragSource, moonObjData, 1);
 
   //skybox
-  initializeMyObject(vertSource, skyboxFragSource, skyboxObjData,2);
+  initializeMyObject(vertSource, skyboxFragSource, skyboxObjData, 2);
 
   //earth clouds
-  initializeMyObject(vertSource, cloudFragSource, cloudObjData,3);
+  initializeMyObject(vertSource, cloudFragSource, cloudObjData, 3);
 
   //spacecraft
-  initializeMyObject(spacecraftVertSource, spacecraftFragSource, spacecraftObjData,4);
+  initializeMyObject(spacecraftVertSource, spacecraftFragSource, spacecraftObjData, 4);
 
   //reflector
-  initializeMyObject(reflectorVertSource, reflectorFragSource, cubeObjData,5);
+  initializeMyObject(reflectorVertSource, reflectorFragSource, cubeObjData, 5);
 
 
 
@@ -261,12 +260,12 @@ function drawScene(deltaTime) {
 
   // Clear the color buffer with specified clear color
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  
+
 
   let viewMatrix = glMatrix.mat4.create();
-  var camX = parseFloat(document.getElementById("camXVal").value)/1;
-  var camY = parseFloat(document.getElementById("camYVal").value)/1;
-  var camZ = parseFloat(document.getElementById("camZVal").value)/1;
+  var camX = parseFloat(document.getElementById("camXVal").value) / 1;
+  var camY = parseFloat(document.getElementById("camYVal").value) / 1;
+  var camZ = parseFloat(document.getElementById("camZVal").value) / 1;
   //console.log("Cam X: ",camX)
   //console.log("Cam Y: ",camY)
   //console.log("Cam Z: ",camZ)
@@ -281,56 +280,56 @@ function drawScene(deltaTime) {
 
 
   //xyz
-  let cameraPos = [camX,camY,camZ];
-  cameraPosition = glMatrix.vec3.fromValues(camX,camY,camZ);
+  let cameraPos = [camX, camY, camZ];
+  cameraPosition = glMatrix.vec3.fromValues(camX, camY, camZ);
   let cameraFocus = [0.0 + focusX, 0.0 + focusY, 0.0 + focusZ];
   glMatrix.mat4.lookAt(viewMatrix,
-                       cameraPos,
-                       cameraFocus,
-                       [0.0, 1.0, 0.0]
-                      );
+    cameraPos,
+    cameraFocus,
+    [0.0, 1.0, 0.0]
+  );
 
 
 
-  
+
 
   /* Do the model matrix stuff */
   //-----------------------------------------------------------------------------
-  
-  for(let i = 0; i < sphereModelCountMAX; i++){
-    
-    if(myDrawable[i]){
+
+  for (let i = 0; i < sphereModelCountMAX; i++) {
+
+    if (myDrawable[i]) {
       modelViewMatrix = glMatrix.mat4.create();
       modelMatrix = glMatrix.mat4.create();
 
       let objectWorldPos = [0.0, 0.0, 0.0];
       let rotationAxis = [0.0, 1.0, 0.0];
       let scalingVector = [2.0, 2.0, 2.0];
-      
+
 
       //src body shouldnt orbit, orbital stuff
-      if(i == 1){
-        glMatrix.mat4.rotate(modelMatrix,modelMatrix,globalTime/8,rotationAxis);
+      if (i == 1) {
+        glMatrix.mat4.rotate(modelMatrix, modelMatrix, globalTime / 8, rotationAxis);
       }
 
-      if(i == 4){
-        glMatrix.mat4.rotate(modelMatrix,modelMatrix,-(globalTime/3),[1.0, 1.0, -1.0]);
+      if (i == 4) {
+        glMatrix.mat4.rotate(modelMatrix, modelMatrix, -(globalTime / 3), [1.0, 1.0, -1.0]);
         //glMatrix.mat4.rotate(modelMatrix,modelMatrix,globalTime/10,rotationAxis);
       }
-      
+
       //reflector
-      if(i == 5){
-        glMatrix.mat4.rotate(modelMatrix,modelMatrix,-(globalTime/3),rotationAxis);
+      if (i == 5) {
+        glMatrix.mat4.rotate(modelMatrix, modelMatrix, -(globalTime / 3), rotationAxis);
       }
 
 
-      
+
       //change props for each individual planet or body
-      adjustPlanet(i,modelMatrix);
+      adjustPlanet(i, modelMatrix);
 
 
-      
-      
+
+
 
 
 
@@ -341,27 +340,27 @@ function drawScene(deltaTime) {
       glMatrix.mat3.identity(normalViewMatrix);
       glMatrix.mat4.translate(modelMatrix, modelMatrix, cameraFocus);
       //glMatrix.mat3.translate(normalViewMatrix, cameraPosition,viewMatrix);
-      
-     
+
+
 
       //move to 0 0 0 , left over from solar system thing
       glMatrix.mat4.translate(modelMatrix, modelMatrix, objectWorldPos);
-      
-      
+
+
       //myDrawable[i].scalingVector = scalingVector;
 
       //comment to turn off scaling
-      glMatrix.mat4.scale(modelMatrix,modelMatrix,(myDrawable[i].scalingVector));
-      
+      glMatrix.mat4.scale(modelMatrix, modelMatrix, (myDrawable[i].scalingVector));
+
       //invert the model and trans pose it
       glMatrix.mat4.invert(modelViewMatrix, modelMatrix);
-			glMatrix.mat4.transpose(modelViewMatrix, modelViewMatrix);
+      glMatrix.mat4.transpose(modelViewMatrix, modelViewMatrix);
 
       //conver5
       glMatrix.mat3.fromMat4(normalViewMatrix, modelViewMatrix);
 
-      
-     
+
+
       //multiply the matrix
       glMatrix.mat4.mul(modelViewMatrix, viewMatrix, modelMatrix);
 
@@ -374,74 +373,74 @@ function drawScene(deltaTime) {
 
 //set each planets orbit based on id by retruing pos array
 //scaling losely based off this: https://solarsystem.nasa.gov/resources/686/solar-system-sizes/
-function adjustPlanet(planetID,modelMatrix){
+function adjustPlanet(planetID, modelMatrix) {
 
-  
+
   let earthScaleFactor = [1.90, 1.90, 1.90];
   let cloudScaleFactor = [1.92, 1.92, 1.92];
   let skyboxScaleFactor = [200, 200, 200];
   // skybox? let earthCloudScaleFactor = [21.0, 21.0, 21.0];
-  let moonScaleFactor  = [0.5, 0.5, 0.5];
-  let spacecraftScaleFactor = [0.5,0.5,0.5];
-  let reflectScaleFactor = [0.5,0.5,0.5];
-  
+  let moonScaleFactor = [0.5, 0.5, 0.5];
+  let spacecraftScaleFactor = [0.5, 0.5, 0.5];
+  let reflectScaleFactor = [0.5, 0.5, 0.5];
+
   let i = planetID;
-  
-  switch(planetID) {
-    
+
+  switch (planetID) {
+
     //do translate before scale!!!
-    
+
     //earth
     case 0:
       glMatrix.mat4.translate(modelMatrix, modelMatrix, [0.0, 0.0, 0.0]);
       glMatrix.mat4.scale(modelMatrix, modelMatrix, earthScaleFactor);
-      glMatrix.mat4.rotate(modelMatrix,modelMatrix,(globalTime/10),[0.0, 1.0, 0.0]);
-      
+      glMatrix.mat4.rotate(modelMatrix, modelMatrix, (globalTime / 10), [0.0, 1.0, 0.0]);
+
       break;
-    
-    
+
+
     //moon
     case 1:
       glMatrix.mat4.translate(modelMatrix, modelMatrix, [2.1, 0.0, 2.1]);
       glMatrix.mat4.scale(modelMatrix, modelMatrix, moonScaleFactor);
-      glMatrix.mat4.rotate(modelMatrix,modelMatrix,(0),[0.0, 1.0, 0.0]);
+      glMatrix.mat4.rotate(modelMatrix, modelMatrix, (0), [0.0, 1.0, 0.0]);
       moonPosCurrent[0] = modelMatrix[12];
       moonPosCurrent[1] = modelMatrix[13];
       moonPosCurrent[2] = modelMatrix[14];
       //console.log(moonPosCurrent);
       break;
-    
+
     //skybox
     case 2:
       glMatrix.mat4.translate(modelMatrix, modelMatrix, [0.0, 0.0, 0.0]);
       glMatrix.mat4.scale(modelMatrix, modelMatrix, skyboxScaleFactor);
-      glMatrix.mat4.rotate(modelMatrix,modelMatrix,(0),[0.0, 1.0, 0.0]);
+      glMatrix.mat4.rotate(modelMatrix, modelMatrix, (0), [0.0, 1.0, 0.0]);
       break;
-    
+
     //earth clouds
     case 3:
       glMatrix.mat4.translate(modelMatrix, modelMatrix, [0.0, 0.0, 0.0]);
       glMatrix.mat4.scale(modelMatrix, modelMatrix, cloudScaleFactor);
-      glMatrix.mat4.rotate(modelMatrix,modelMatrix,(globalTime/9),[0.0, 1.0, 0.0]);
-      
+      glMatrix.mat4.rotate(modelMatrix, modelMatrix, (globalTime / 9), [0.0, 1.0, 0.0]);
+
       break;
 
     //spacecraft
     case 4:
       glMatrix.mat4.translate(modelMatrix, modelMatrix, [0.0, 2.2, 0.0]);
       glMatrix.mat4.scale(modelMatrix, modelMatrix, spacecraftScaleFactor);
-      glMatrix.mat4.rotate(modelMatrix,modelMatrix,(globalTime),[0.0, 1.0, 0.0]);
-      
+      glMatrix.mat4.rotate(modelMatrix, modelMatrix, (globalTime), [0.0, 1.0, 0.0]);
+
       break;
-    
+
     //reflector
     case 5:
       glMatrix.mat4.translate(modelMatrix, modelMatrix, [2.0, 1.0, 2.0]);
       glMatrix.mat4.scale(modelMatrix, modelMatrix, reflectScaleFactor);
-      glMatrix.mat4.rotate(modelMatrix,modelMatrix,(globalTime/3),[1.0, 1.0, 1.0]);
-      
+      glMatrix.mat4.rotate(modelMatrix, modelMatrix, (globalTime / 3), [1.0, 1.0, 1.0]);
+
       break;
-    
+
   }
 }
 
@@ -459,20 +458,20 @@ function initializeMyObject(vertSource, fragSource, objData, i) {
     gl.FLOAT,         // What type should WebGL treat it as?
     3                 // How many per vertex?
   );
-  
+
   let vertexNormalBuffer = new VertexArrayData(
     rawData.normals,
     gl.FLOAT,
     3
   );
-  
-  let vertexTexCoordBuffer = new VertexArrayData (
+
+  let vertexTexCoordBuffer = new VertexArrayData(
     rawData.uvs,
     gl.FLOAT,
     2
   );
-  
-  let vertexBarycentricBuffer = new VertexArrayData (
+
+  let vertexBarycentricBuffer = new VertexArrayData(
     rawData.barycentricCoords,
     gl.FLOAT,
     3
@@ -513,13 +512,13 @@ function initializeMyObject(vertSource, fragSource, objData, i) {
     'aVertexTexCoord': vertexTexCoordBuffer,
 
     //bitangent and tangent buffers
-    'aVertexBiTangentBuffer':vertexBiTangentBuffer,
-    'aVertexTangentBuffer':vertexTangentBuffer,
+    'aVertexBiTangentBuffer': vertexBiTangentBuffer,
+    'aVertexTangentBuffer': vertexTangentBuffer,
   };
-  
+
   myDrawable[i] = new Drawable(myShader, bufferMap, null, rawData.vertices.length / 3);
 
-  
+
 
 
   // texture stuff
@@ -530,22 +529,22 @@ function initializeMyObject(vertSource, fragSource, objData, i) {
   //console.log(myDrawable[i].id);
 
   //create textureVars
-  var earthTextures = APIloadNormalMap(textureSrcs.earth,textureSrcs.earthBumpMap, rawData.faces,0);
-  var moonTextures = APIloadNormalMap(textureSrcs.moon,textureSrcs.moonBumpMap, rawData.faces,1);
-  var cloudTextures = APIloadNormalMap(textureSrcs.clouds,"", rawData.faces,2);
-  var skyboxTextures = APIloadNormalMap(textureSrcs.skybox,"", rawData.faces,3);
+  var earthTextures = APIloadNormalMap(textureSrcs.earth, textureSrcs.earthBumpMap, rawData.faces, 0);
+  var moonTextures = APIloadNormalMap(textureSrcs.moon, textureSrcs.moonBumpMap, rawData.faces, 1);
+  var cloudTextures = APIloadNormalMap(textureSrcs.clouds, "", rawData.faces, 2);
+  var skyboxTextures = APIloadNormalMap(textureSrcs.skybox, "", rawData.faces, 3);
   //add on specular texture for earth
-  earthTextures.push(loadTexture(textureSrcs.earthSpecularMap, rawData.faces, null,4));
+  earthTextures.push(loadTexture(textureSrcs.earthSpecularMap, rawData.faces, null, 4));
 
   //console.log(earthTextures)
   //console.log(textureSrcs.clouds)
-  
+
 
   //console.log(moonTextures);
   //console.log("------------------");
-  
 
-  
+
+
   //activate and bind each texture and normal texture
 
 
@@ -599,15 +598,15 @@ function initializeMyObject(vertSource, fragSource, objData, i) {
   gl.activeTexture(gl.TEXTURE10);
   gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
   gl.bindTexture(gl.TEXTURE_CUBE_MAP, earthTextures[2]);
-  
- 
+
+
 
   // Checkout the drawable class' draw function. It calls a uniform setup function every time it is drawn. 
   // Put your uniforms that change per frame in this setup function.
 
   //light source must be at cam location so have that as a uniform along with normals and shader details from the tab;e
-  myDrawable[i].uniformLocations = myShader.getUniformLocations(['uModelViewMatrix','uYVal','uShowCloudsBool', 'uProjectionMatrix','uNormalMatrix','uCameraPosition','uAmbient','uDiffuse','uSpecular','uShininess','uSpacecraftAmbient','uSpacecraftDiffuse','uSpacecraftSpecular','uSpacecraftShininess','uTexture','uSkyboxTexture','uEarthNormalsTexture','uEarthSpecTexture','uMoonNormalsTexture','uModelMatrix','uMoonPosition','uFogColor','uFogAmount','uEnviromapTexture']);
- 
+  myDrawable[i].uniformLocations = myShader.getUniformLocations(['uModelViewMatrix', 'uYVal', 'uShowCloudsBool', 'uProjectionMatrix', 'uNormalMatrix', 'uCameraPosition', 'uAmbient', 'uDiffuse', 'uSpecular', 'uShininess', 'uSpacecraftAmbient', 'uSpacecraftDiffuse', 'uSpacecraftSpecular', 'uSpacecraftShininess', 'uTexture', 'uSkyboxTexture', 'uEarthNormalsTexture', 'uEarthSpecTexture', 'uMoonNormalsTexture', 'uModelMatrix', 'uMoonPosition', 'uFogColor', 'uFogAmount', 'uEnviromapTexture']);
+
 
   //material data vals, these are from that table
   let materialAmbi = [0.5, 0.5, 0.5, 1.0];
@@ -621,9 +620,9 @@ function initializeMyObject(vertSource, fragSource, objData, i) {
   let spacecraftMaterialSpec = [0.774597, 0.774597, 0.774597, 1.0];
   let spacecraftMaterialShin = [76.8];
 
-  
+
   //fog data
-  let fogColor =  [1.0, 1.0, 1.0, 1.0];
+  let fogColor = [1.0, 1.0, 1.0, 1.0];
 
   //for step 4
   myDrawable[i].uniformSetup = () => {
@@ -652,8 +651,8 @@ function initializeMyObject(vertSource, fragSource, objData, i) {
       normalViewMatrix
     );
 
-    
-    
+
+
 
 
     //uniform position var for the camera since the light source is from the camera
@@ -663,14 +662,14 @@ function initializeMyObject(vertSource, fragSource, objData, i) {
       myDrawable[i].uniformLocations.uCameraPosition,
       cameraPosition
     );
-    
-    
+
+
     //moon coords
     gl.uniform3fv(
       myDrawable[i].uniformLocations.uMoonPosition,
       moonPosCurrent
     );
-    
+
 
     //values  from lab2 table, set to the approprait uniforms
     gl.uniform4fv(
@@ -707,7 +706,7 @@ function initializeMyObject(vertSource, fragSource, objData, i) {
       myDrawable[i].uniformLocations.uSpacecraftShininess,
       spacecraftMaterialShin
     );
-    
+
 
     //camYVals for moon
     gl.uniform1f(
@@ -728,7 +727,7 @@ function initializeMyObject(vertSource, fragSource, objData, i) {
       2
     );
 
- 
+
 
     //earth normal and moon normal
     gl.uniform1i(
@@ -758,49 +757,49 @@ function initializeMyObject(vertSource, fragSource, objData, i) {
     //fog amount float
     gl.uniform1f(
       myDrawable[i].uniformLocations.uFogAmount,
-      ((parseFloat(document.getElementById("fogXVal").value)/2)/100)/1.9
+      ((parseFloat(document.getElementById("fogXVal").value) / 2) / 100) / 1.9
     );
-      
+
     //show clouds
     gl.uniform1i(
       myDrawable[i].uniformLocations.uShowCloudsBool,
       Number(showCloudsBool)
     );
-    
+
   };
 
   //------step3 stuff-------
   //basically followed the psuedocode
 
   //create max and mix xyz vector
-  var maxXYZ = glMatrix.vec3.fromValues(rawData.bbox["maxX"],rawData.bbox["maxY"],rawData.bbox["maxZ"]);
-  var minXYZ = glMatrix.vec3.fromValues(rawData.bbox["minX"],rawData.bbox["minY"],rawData.bbox["minZ"]);
-  
+  var maxXYZ = glMatrix.vec3.fromValues(rawData.bbox["maxX"], rawData.bbox["maxY"], rawData.bbox["maxZ"]);
+  var minXYZ = glMatrix.vec3.fromValues(rawData.bbox["minX"], rawData.bbox["minY"], rawData.bbox["minZ"]);
+
   //create span and unitspan vectors
   var span = glMatrix.vec3.create();
   var unitSpan = glMatrix.vec3.create();
-  
+
   //use vector ops for this cus they are vectors
 
   //subtract the max and min
-  span = glMatrix.vec3.sub(span,maxXYZ,minXYZ);
+  span = glMatrix.vec3.sub(span, maxXYZ, minXYZ);
 
   //normalize it and get scale
-  unitSpan = glMatrix.vec3.normalize(unitSpan,span)
-  var xScale = (unitSpan[0]/span[0]); 
-  var yScale = (unitSpan[1]/span[1]); 
-  var zScale = (unitSpan[2]/span[2]);
+  unitSpan = glMatrix.vec3.normalize(unitSpan, span)
+  var xScale = (unitSpan[0] / span[0]);
+  var yScale = (unitSpan[1] / span[1]);
+  var zScale = (unitSpan[2] / span[2]);
 
 
   //console.log(xScale);
   //console.log(yScale);
   //console.log(zScale);
-  
+
   //create the scaling vector
-  myDrawable[i].scalingVector = glMatrix.vec3.fromValues(xScale,yScale,zScale);
-  
+  myDrawable[i].scalingVector = glMatrix.vec3.fromValues(xScale, yScale, zScale);
+
   //divide the span and unit span so they are relative for each mdoel
-  glMatrix.vec3.div(myDrawable[i].scalingVector,unitSpan,span);
+  glMatrix.vec3.div(myDrawable[i].scalingVector, unitSpan, span);
   myDrawableInitialized = true;
 }
 
